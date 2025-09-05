@@ -3772,8 +3772,7 @@ class Dataset(
         for k, v in self.variables.items():
             dims = tuple(dims_dict.get(dim, dim) for dim in v.dims)
             if k in result_dims:
-                var = v.to_index_variable()
-                var.dims = dims
+                var = IndexVariable(dims, v._data, v._attrs, encoding=v._encoding, fastpath=True)
                 if k in self._indexes:
                     indexes[k] = self._indexes[k]
                     variables[k] = var
@@ -3783,8 +3782,7 @@ class Dataset(
                     variables.update(index_vars)
                     coord_names.update(index_vars)
             else:
-                var = v.to_base_variable()
-                var.dims = dims
+                var = Variable(dims, v._data, v._attrs, encoding=v._encoding, fastpath=True)
                 variables[k] = var
 
         return self._replace_with_new_dims(variables, coord_names, indexes=indexes)
